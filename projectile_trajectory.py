@@ -1,14 +1,16 @@
 import math
 import pygame
 
-initial_height = 384
+initial_height = 150
 target_distance = 512
 
 screen_width = 1024
 screen_height = 768
 
-velocity = 90
-angle = math.radians(45)
+target = [512, 384]
+
+velocity = 100
+angle = math.radians(75)
 cos_theta = math.cos(angle)
 sin_theta = math.sin(angle)
 tan_theta = math.tan(angle)
@@ -23,13 +25,18 @@ def deltaTiming(start, final, d):
     while start < final:
         numbers.append(start)
         start = start + d
-
     return numbers
 
-def calculate_trajectory(velocity, gravity, initial_height):
+def calculate_trajectory(velocity, target_distance, gravity, initial_height):
     x, y = [], []
 
+    if (target[0] > 0 and target[1] > 0):
+        target_distance = 0
+        pygame.draw.circle(screen, (0, 255, 0), (target[0], target[1]), 10)
+        velocity = (math.sqrt(4.9) * target[0]) / (cos_theta * math.sqrt(initial_height + tan_theta * target[0] - target[1]))
+
     if (target_distance > 0):
+        pygame.draw.circle(screen, (0, 255, 0), (target_distance, screen_height), 10)
         velocity = (math.sqrt(4.9) * target_distance) / (cos_theta * math.sqrt(initial_height + tan_theta * target_distance))
 
     t_flight = findT((-0.5 * gravity), (velocity * sin_theta), initial_height)
@@ -50,9 +57,8 @@ def draw(x, y):
 
 pygame.init()
 screen = pygame.display.set_mode((screen_width, screen_height))
-pygame.draw.circle(screen, (0, 255, 0), (target_distance, screen_height), 10)
 
-x, y = calculate_trajectory(velocity, gravity, initial_height)
+x, y = calculate_trajectory(velocity, target_distance, gravity, initial_height)
 draw(x, y)
 
 while True:
