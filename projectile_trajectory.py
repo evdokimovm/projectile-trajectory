@@ -1,20 +1,20 @@
 import math
 import pygame
 
-initial_height = 150
-target_distance = 512
-
 screen_width = 1024
 screen_height = 768
 
 target = [319, 100]
+initial_height = 150
+target_distance = 512
 
-velocity = 100
-angle = math.radians(75)
+gravity = 9.8
+velocity = 90
+
+angle = math.radians(45)
 cos_theta = math.cos(angle)
 sin_theta = math.sin(angle)
 tan_theta = math.tan(angle)
-gravity = 9.8
 
 def translate(coords, height):
     return (coords[0], height - coords[1])
@@ -57,7 +57,6 @@ def calculate_trajectory(velocity, target, target_distance, gravity, initial_hei
 def draw(x, y):
     for i in range(len(x)):
         pygame.draw.rect(screen, (0, 255, 0), (x[i], screen_height - y[i] - initial_height, 1, 1))
-
         pygame.display.flip()
 
 pygame.init()
@@ -72,3 +71,7 @@ while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            pos = translate(pygame.mouse.get_pos(), screen_height)
+            x, y = calculate_trajectory(velocity, pos, target_distance, gravity, initial_height)
+            draw(x, y)
