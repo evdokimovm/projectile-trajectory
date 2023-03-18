@@ -56,12 +56,14 @@ def draw(x, y):
         pygame.display.flip()
 
 pygame.init()
+clock = pygame.time.Clock()
 screen = pygame.display.set_mode((screen_width, screen_height))
 
 x, y = calculate_trajectory(velocity, target_distance, gravity, initial_height)
 draw(x, y)
 
 while True:
+    clock.tick(60)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
